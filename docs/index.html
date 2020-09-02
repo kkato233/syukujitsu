@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -44,6 +44,17 @@
     }
   }
   </style>
+  <link href="./lib/jqueryui/jquery-ui.min.css" rel="stylesheet" />
+  <style type="text/css">
+    .ui-datepicker-calendar .day-sunday > a,
+    .ui-datepicker-calendar .day-holiday > a {
+        background: #ffc0c0;
+    }
+
+    .ui-datepicker-calendar .day-saturday > a {
+        background: #c0d0ff;
+    }
+</style>
 </head>
 <body>
 
@@ -75,14 +86,42 @@
   </nav>
 </header>
 
+<!-- Begin page content -->
+<main role="main" class="flex-shrink-0">
+  <div class="container">
+	<p>jQuery UI DateTimePicker 日本の祝日対応版: <input type="text" id="datepicker" placeholder="日付を選択してください"></p>
+  </div>
+</main>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="./js/bootstrap.min.js"></script>
 
-<script type="text/javascript">
-  $('.bs-component [data-toggle="popover"]').popover();
-  $('.bs-component [data-toggle="tooltip"]').tooltip();
+<script src="./lib/jquery/jquery.min.js"></script>
+<script src="./lib/jqueryui/jquery-ui.min.js"></script>
+<script src="./lib/jquery-ui-i18n/datepicker-ja.js"></script>
+<script>
+
+    $.get("./lib/ja-holiday/syukujitsu.json", function (holidaysData) {
+        $("#datepicker").datepicker({
+            beforeShowDay: function (date) {
+                if (date.getDay() == 0) {
+                    return [true, 'day-sunday', null];
+                } else if (date.getDay() == 6) {
+                    return [true, 'day-saturday', null];
+                }
+
+                var holidays = Object.keys(holidaysData);
+                for (var i = 0; i < holidays.length; i++) {
+                    var holiday = new Date(Date.parse(holidays[i]));
+                    if (holiday.getYear() == date.getYear() &&
+                        holiday.getMonth() == date.getMonth() &&
+                        holiday.getDate() == date.getDate()) {
+                        return [true, 'day-holiday', null];
+                    }
+                }
+
+                return [true, 'day-weekday', null];
+            }
+        });
+    });
 </script>
 </body>
 </html>
