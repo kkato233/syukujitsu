@@ -12,6 +12,8 @@ https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv
 
 ### jQuery UI の DateTime Picker で 祝日の対応
 
+https://kkato233.github.io/syukujitsu/	参照
+
 ### syukujitsu.json 作成
 
 ```
